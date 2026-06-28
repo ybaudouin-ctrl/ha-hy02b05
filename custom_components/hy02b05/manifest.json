@@ -1,0 +1,23 @@
+{
+  "domain": "hy02b05",
+  "name": "HY02B05 Thermostat",
+  "version": "0.1.0",
+  "documentation": "https://github.com/<TON_GITHUB>/ha-hy02b05",
+  "issue_tracker": "https://github.com/<TON_GITHUB>/ha-hy02b05/issues",
+  "codeowners": [
+    "ybaudouin-ctrl"
+  ],
+  "config_flow": true,
+  "integration_type": "device",
+  "iot_class": "local_push",
+  "requirements": [],
+  "dependencies": [
+    "mqtt"
+  ],
+  "after_dependencies": [
+    "mqtt"
+  ],
+  "loggers": [
+    "custom_components.hy02b05"
+  ]
+}

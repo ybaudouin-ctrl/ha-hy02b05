@@ -1,0 +1,1 @@
+"""HY02B05 integration."""
