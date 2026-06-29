@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 from homeassistant.components.climate import HVACMode
 from homeassistant.helpers.device_registry import DeviceInfo
@@ -15,6 +16,9 @@ from .const import (
     MANUFACTURER,
     MODEL,
 )
+
+if TYPE_CHECKING:
+    from .mqtt import HY02MQTT
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -90,13 +94,22 @@ class HY02Commands:
 
 
 class HY02Coordinator(DataUpdateCoordinator):
+    """Coordinator for HY02B05 thermostat.
+
+    Manages device state, MQTT communication, and command execution.
+    """
 
     def __init__(
         self,
         hass,
         topic: str,
-    ):
+    ) -> None:
+        """Initialize coordinator.
 
+        Args:
+            hass: Home Assistant instance
+            topic: MQTT topic for the device
+        """
         super().__init__(
             hass,
             logger=_LOGGER,
@@ -104,10 +117,12 @@ class HY02Coordinator(DataUpdateCoordinator):
         )
 
         self.topic = topic
-
         self.state = HY02State()
-
         self.commands = HY02Commands(self)
+
+        from .mqtt import HY02MQTT
+
+        self.mqtt: HY02MQTT = HY02MQTT(self)
 
         self.device_info = DeviceInfo(
             identifiers={(DOMAIN, topic)},
@@ -115,3 +130,37 @@ class HY02Coordinator(DataUpdateCoordinator):
             model=MODEL,
             name=topic,
         )
+
+    async def _async_update_data(self) -> HY02State:
+        """Fetch data from the coordinator.
+
+        The coordinator is driven by MQTT messages, not polling.
+        This method is required by DataUpdateCoordinator but does no actual polling.
+
+        Returns:
+            Current state
+        """
+        return self.state
+
+    async def async_config_entry_first_refresh(self) -> None:
+        """Establish MQTT connectivity on first refresh.
+
+        Connects to MQTT topics before the first data refresh.
+        """
+        await self.mqtt.async_connect()
+        await super().async_config_entry_first_refresh()
+
+    async def async_shutdown(self) -> None:
+        """Shut down the coordinator.
+
+        Cleans up MQTT subscriptions and resources.
+        """
+        _LOGGER.debug("Shutting down coordinator for %s", self.topic)
+
+        if self.mqtt and hasattr(self.mqtt, "async_disconnect"):
+            try:
+                await self.mqtt.async_disconnect()
+            except Exception as err:
+                _LOGGER.warning(
+                    "Error disconnecting MQTT topics for %s: %s", self.topic, err
+                )
