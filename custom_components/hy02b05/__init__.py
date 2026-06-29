@@ -5,7 +5,7 @@ from homeassistant.core import HomeAssistant
 
 from .const import DOMAIN
 
-PLATFORMS=("climate","sensor","switch","select")
+PLATFORMS = ("climate",)
 
 async def async_setup(hass: HomeAssistant, config: dict)->bool:
     return True

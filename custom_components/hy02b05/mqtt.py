@@ -77,9 +77,11 @@ class HY02MQTT:
 
     async def _power_message(self, msg):
 
-        self.coordinator.state.power = (
-            msg.payload.upper() == "ON"
-        )
+        payload = msg.payload
+        if isinstance(payload, bytes):
+            payload = payload.decode("utf-8")
+
+        self.coordinator.state.power = payload.strip().upper() == "ON"
 
         self.coordinator.async_update_listeners()
 
@@ -98,7 +100,7 @@ class HY02MQTT:
 
         if "DpType4Id4" in tuya:
 
-            self.coordinator.state.mode = tuya["DpType4Id4"]
+            self.coordinator.state.preset_mode = str(tuya["DpType4Id4"])
 
         #
         # DP6

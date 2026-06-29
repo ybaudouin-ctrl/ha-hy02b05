@@ -6,24 +6,21 @@ from homeassistant.components.climate import (
     ClimateEntity,
     HVACMode,
 )
-
-from homeassistant.components.climate.const import (
-    ClimateEntityFeature,
-)
-
+from homeassistant.components.climate.const import ClimateEntityFeature
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .entity import HY02Entity
 from .const import HY02Mode
+from .entity import HY02Entity
+
 
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
-):
-
+) -> None:
+    """Set up climate platform."""
     coordinator = hass.data["hy02b05"][entry.entry_id]
 
     async_add_entities(
@@ -32,7 +29,9 @@ async def async_setup_entry(
         ]
     )
 
+
 class HY02Climate(HY02Entity, ClimateEntity):
+    """HY02B05 climate entity."""
 
     _attr_name = None
 
@@ -57,78 +56,59 @@ class HY02Climate(HY02Entity, ClimateEntity):
         "override",
     ]
 
-@property
-def current_temperature(self):
+    @property
+    def current_temperature(self) -> float | None:
+        """Return current temperature."""
+        return self.coordinator.state.current_temperature
 
-    return self.coordinator.state.current_temperature
+    @property
+    def target_temperature(self) -> float | None:
+        """Return target temperature."""
+        return self.coordinator.state.target_temperature
 
+    @property
+    def hvac_mode(self) -> HVACMode:
+        """Return current HVAC mode."""
+        if self.coordinator.state.power:
+            return HVACMode.HEAT
+        return HVACMode.OFF
 
-@property
-def target_temperature(self):
+    @property
+    def preset_mode(self) -> str:
+        """Return current preset mode."""
+        mode_int = int(self.coordinator.state.preset_mode)
 
-    return self.coordinator.state.target_temperature
+        if mode_int == HY02Mode.MANUAL:
+            return "manual"
+        if mode_int == HY02Mode.AUTO:
+            return "auto"
+        if mode_int == HY02Mode.AWAY:
+            return "away"
+        return "override"
 
-@property
-def hvac_mode(self):
+    async def async_set_temperature(self, **kwargs) -> None:
+        """Set target temperature."""
+        temperature = kwargs.get("temperature")
 
-    if self.coordinator.state.power:
+        if temperature is None:
+            return
 
-        return HVACMode.HEAT
+        await self.coordinator.commands.set_temperature(temperature)
 
-    return HVACMode.OFF
+    async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:
+        """Set HVAC mode."""
+        if hvac_mode == HVACMode.OFF:
+            await self.coordinator.commands.set_power(False)
+        else:
+            await self.coordinator.commands.set_power(True)
 
-@property
-def preset_mode(self):
-
-    mode = self.coordinator.state.mode
-
-    if mode == HY02Mode.MANUAL:
-        return "manual"
-
-    if mode == HY02Mode.AUTO:
-        return "auto"
-
-    if mode == HY02Mode.AWAY:
-        return "away"
-
-    return "override"
-
-async def async_set_temperature(self, **kwargs):
-
-    temperature = kwargs.get("temperature")
-
-    if temperature is None:
-        return
-
-    await self.coordinator.commands.set_temperature(
-        temperature,
-    )
-
-async def async_set_hvac_mode(self, hvac_mode):
-
-    if hvac_mode == HVACMode.OFF:
-
-        await self.coordinator.commands.set_power(False)
-
-    else:
-
-        await self.coordinator.commands.set_power(True)
-
-async def async_set_preset_mode(self, preset):
-
-    if preset == "manual":
-
-        await self.coordinator.commands.set_manual()
-
-    elif preset == "auto":
-
-        await self.coordinator.commands.set_auto()
-
-    elif preset == "away":
-
-        await self.coordinator.commands.set_away()
-
-    elif preset == "override":
-
-        await self.coordinator.commands.set_override()
-
+    async def async_set_preset_mode(self, preset_mode: str) -> None:
+        """Set preset mode."""
+        if preset_mode == "manual":
+            await self.coordinator.commands.set_mode(HY02Mode.MANUAL)
+        elif preset_mode == "auto":
+            await self.coordinator.commands.set_mode(HY02Mode.AUTO)
+        elif preset_mode == "away":
+            await self.coordinator.commands.set_mode(HY02Mode.AWAY)
+        elif preset_mode == "override":
+            await self.coordinator.commands.set_mode(HY02Mode.OVERRIDE)
