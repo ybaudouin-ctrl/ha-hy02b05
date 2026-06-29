@@ -9,30 +9,25 @@ from homeassistant.components.climate import (
     ClimateEntity,
     HVACMode,
 )
-from homeassistant.components.climate.const import (
-    ClimateEntityFeature,
-    PRESET_AWAY,
-    PRESET_NONE,
-)
+from homeassistant.components.climate.const import ClimateEntityFeature
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import ATTR_TEMPERATURE, UnitOfTemperature
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import HY02Mode
+from .const import HY02Mode, HY02Preset, PRESET_MODES
 from .entity import HY02Entity
 
 _LOGGER = logging.getLogger(__name__)
 
 # Map HY02 preset modes to Home Assistant preset names
 PRESET_MODE_MAP = {
-    HY02Mode.MANUAL: PRESET_NONE,
-    HY02Mode.AUTO: "auto",
-    HY02Mode.AWAY: PRESET_AWAY,
-    HY02Mode.OVERRIDE: "boost",
+    HY02Mode.MANUAL: HY02Preset.MANUAL,
+    HY02Mode.AUTO: HY02Preset.AUTO,
+    HY02Mode.AWAY: HY02Preset.AWAY,
+    HY02Mode.OVERRIDE: HY02Preset.OVERRIDE,
 }
 
-# Reverse mapping for setting modes
 REVERSE_PRESET_MODE_MAP = {v: k for k, v in PRESET_MODE_MAP.items()}
 
 
@@ -79,12 +74,7 @@ class HY02Climate(HY02Entity, ClimateEntity):
         HVACMode.HEAT,
     ]
 
-    _attr_preset_modes = [
-        PRESET_NONE,  # manual
-        "auto",
-        PRESET_AWAY,
-        "boost",
-    ]
+    _attr_preset_modes = PRESET_MODES
 
     @property
     def current_temperature(self) -> float | None:
@@ -113,14 +103,9 @@ class HY02Climate(HY02Entity, ClimateEntity):
     def preset_mode(self) -> str | None:
         """Return current preset mode."""
         try:
-            mode_int = int(self.coordinator.state.preset_mode)
-            return PRESET_MODE_MAP.get(mode_int, PRESET_NONE)
-        except (ValueError, TypeError):
-            _LOGGER.warning(
-                "Invalid preset_mode value: %s",
-                self.coordinator.state.preset_mode,
-            )
-            return PRESET_NONE
+            return PRESET_MODE_MAP.get(HY02Mode(int(self.coordinator.state.preset_mode)), HY02Preset.MANUAL)
+        except Exception:
+            return HY02Preset.MANUAL
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:

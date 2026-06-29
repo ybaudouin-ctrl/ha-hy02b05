@@ -36,7 +36,7 @@ class HY02State:
 
     hvac_mode: HVACMode = HVACMode.OFF
 
-    preset_mode: str = HY02Preset.MANUAL
+    preset_mode: int = 0
 
     child_lock: bool = False
 
@@ -77,7 +77,7 @@ class HY02Commands:
 
         await mqtt.async_publish(
             self.hass,
-            f"cmnd/{self.topic}/TuyaSend1",
+            f"cmnd/{self.topic}/TuyaSend4",
             f"4,{mode}",
         )
 
@@ -88,7 +88,7 @@ class HY02Commands:
         payload = "1" if locked else "0"
         await mqtt.async_publish(
             self.hass,
-            f"cmnd/{self.topic}/TuyaSend1",
+            f"cmnd/{self.topic}/TuyaSend4",
             f"6,{payload}",
         )
 

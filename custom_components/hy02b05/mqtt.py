@@ -235,7 +235,7 @@ class HY02MQTT:
 
         # DP4: Mode (Manual, Auto, Away, Override)
         if "DpType4Id4" in tuya:
-            self.coordinator.state.preset_mode = str(tuya["DpType4Id4"])
+            self.coordinator.state.preset_mode = int(tuya["DpType4Id4"])
             _LOGGER.debug(
                 "Updated preset_mode to %s for %s",
                 tuya["DpType4Id4"],
