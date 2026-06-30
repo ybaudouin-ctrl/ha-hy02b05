@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.1.0
 
 - Added a Home Assistant switch entity for the thermostat child lock.
 - Changed child lock writes to use Tuya boolean command `TuyaSend1`.
