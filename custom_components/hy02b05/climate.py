@@ -145,28 +145,6 @@ class HY02Climate(HY02Entity, ClimateEntity):
         except Exception as err:
             _LOGGER.error("Failed to set HVAC mode: %s", err)
 
-async def async_set_preset_mode(self, preset_mode: str) -> None:
-
-    _LOGGER.warning(
-
-        "HA preset requested: %r (%s)",
-
-        preset_mode,
-
-        type(preset_mode).__name__,
-
-    )
-
-    mode_value = REVERSE_PRESET_MODE_MAP.get(preset_mode)
-
-    _LOGGER.warning(
-
-        "Mapped to HY02 mode: %r",
-
-        mode_value,
-
-    )
-
     async def async_set_preset_mode(self, preset_mode: str) -> None:
         """Set preset mode via MQTT command.
 
@@ -174,16 +152,7 @@ async def async_set_preset_mode(self, preset_mode: str) -> None:
             preset_mode: One of: 'none', 'auto', 'away', 'boost'
         """
         try:
-            _LOGGER.warning(
-                "HA preset requested: %r (%s)",
-                preset_mode,
-                type(preset_mode).__name__,
-            )
             mode_value = REVERSE_PRESET_MODE_MAP.get(preset_mode)
-            _LOGGER.warning(
-                "Mapped to HY02 mode: %r",
-                mode_value,
-            )
             if mode_value is None:
                 _LOGGER.error(
                     "Invalid preset mode: %s. Valid modes: %s",
