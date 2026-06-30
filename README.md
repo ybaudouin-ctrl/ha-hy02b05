@@ -1,5 +1,9 @@
 # HY02B05 Thermostat for Home Assistant
 
+<p align="center">
+  <img src="custom_components/hy02b05/logo.png" alt="HY02B05 Floureon thermostat" width="180">
+</p>
+
 Custom Home Assistant integration for HY02B05 TuyaMCU thermostats flashed with
 Tasmota, including models sold under the Floureon name.
 

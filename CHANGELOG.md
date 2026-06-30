@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.1
+
+- Added local integration artwork for the HY02B05/Floureon thermostat.
+- Added Home Assistant thermostat icon metadata to the climate entity.
+- Displayed the integration logo in the README.
+
 ## 1.1.0
 
 - Added a Home Assistant switch entity for the thermostat child lock.
