@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="HY02B05 thermostat">
+  <defs>
+    <linearGradient id="case" x1="42" y1="28" x2="214" y2="228" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.56" stop-color="#eef3f6"/>
+      <stop offset="1" stop-color="#cfd9df"/>
+    </linearGradient>
+    <linearGradient id="display" x1="69" y1="60" x2="187" y2="136" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#202d35"/>
+      <stop offset="1" stop-color="#0b1217"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#1f2933" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+
+  <rect width="256" height="256" rx="52" fill="#e8f1f4"/>
+  <rect x="42" y="29" width="172" height="198" rx="28" fill="url(#case)" filter="url(#shadow)"/>
+  <rect x="53" y="41" width="150" height="174" rx="22" fill="none" stroke="#ffffff" stroke-width="3" opacity="0.75"/>
+  <rect x="67" y="59" width="122" height="78" rx="12" fill="url(#display)"/>
+
+  <path d="M87 119h82" stroke="#2dd4bf" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+  <path d="M90 80h18v8H98v13h10v8H90V80zm30 0h18v8h-10v13h10v8h-18V80zm30 0h16a10 10 0 0 1 10 10v9a10 10 0 0 1-10 10h-16V80zm9 8v13h6a3 3 0 0 0 3-3v-7a3 3 0 0 0-3-3h-6z" fill="#f8fafc" opacity="0.96"/>
+  <circle cx="128" cy="121" r="5" fill="#2dd4bf"/>
+
+  <circle cx="128" cy="170" r="23" fill="#f8fafc" stroke="#b8c6ce" stroke-width="4"/>
+  <path d="M128 154v32M112 170h32" stroke="#637381" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="82" cy="169" r="11" fill="#dfe8ed" stroke="#b8c6ce" stroke-width="3"/>
+  <circle cx="174" cy="169" r="11" fill="#dfe8ed" stroke="#b8c6ce" stroke-width="3"/>
+  <path d="M77 169h10M169 169h10" stroke="#637381" stroke-width="4" stroke-linecap="round"/>
+
+  <path d="M101 199h54" stroke="#b8c6ce" stroke-width="5" stroke-linecap="round"/>
+  <path d="M112 209h32" stroke="#d1dce2" stroke-width="4" stroke-linecap="round"/>
+</svg>

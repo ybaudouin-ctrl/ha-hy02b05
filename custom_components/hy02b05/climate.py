@@ -55,6 +55,7 @@ class HY02Climate(HY02Entity, ClimateEntity):
     """
 
     _attr_name = None
+    _attr_icon = "mdi:thermostat"
     _attr_unique_id_suffix = "climate"
 
     _attr_temperature_unit = UnitOfTemperature.CELSIUS
