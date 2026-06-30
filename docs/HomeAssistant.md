@@ -50,9 +50,9 @@ the same broker as Tasmota. This custom integration uses Home Assistant's MQTT
 integration to subscribe and publish; it does not create its own broker
 connection.
 
-## Entity
+## Entities
 
-The current release creates one climate entity.
+The current release creates a climate entity and a child lock switch.
 
 | Feature | Value |
 | --- | --- |
@@ -63,6 +63,11 @@ The current release creates one climate entity.
 | Target step | 0.5 |
 | Presets | `manual`, `auto`, `away`, `override` |
 | Extra attribute | `child_lock_enabled` |
+
+| Entity | Description |
+| --- | --- |
+| `climate.<name>` | Thermostat control |
+| `switch.<name>_child_lock` | Child lock control |
 
 ## Availability
 

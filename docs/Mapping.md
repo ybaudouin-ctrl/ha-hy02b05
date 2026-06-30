@@ -2,7 +2,7 @@
 
 The thermostat is a TuyaMCU device. Tasmota acts as the bridge between MQTT and
 the thermostat MCU. HA-HY02B05 maps the MQTT messages into one Home Assistant
-climate entity.
+climate entity and one child lock switch.
 
 ## MQTT Topics
 
@@ -16,6 +16,7 @@ flow.
 | `stat/<topic>/POWER` | Tasmota -> Home Assistant | Relay/power state |
 | `cmnd/<topic>/POWER` | Home Assistant -> Tasmota | Turn thermostat on or off |
 | `cmnd/<topic>/TuyaSend2` | Home Assistant -> Tasmota | Set target temperature |
+| `cmnd/<topic>/TuyaSend1` | Home Assistant -> Tasmota | Set boolean datapoints such as child lock |
 | `cmnd/<topic>/TuyaSend4` | Home Assistant -> Tasmota | Set enum datapoints such as mode |
 
 ## Datapoints
@@ -26,7 +27,7 @@ flow.
 | 2 | `TuyaSend2 2,<value>` | Target temperature |
 | 3 | `TuyaSNS.Temperature` | Current temperature |
 | 4 | `DpType4Id4` and `TuyaSend4 4,<value>` | Preset mode |
-| 6 | `DpType1Id6` | `child_lock_enabled` attribute |
+| 6 | `DpType1Id6` and `TuyaSend1 6,<value>` | Child lock switch and `child_lock_enabled` attribute |
 
 ## Temperature Scaling
 
@@ -81,8 +82,9 @@ The thermostat target temperature is sent to Tuya as tenths of a degree Celsius.
 }
 ```
 
-## Current Integration Surface
+## Child Lock Values
 
-Only the climate platform is loaded by `custom_components/hy02b05/__init__.py`.
-That means the current release exposes child lock as a climate attribute rather
-than a separate switch entity.
+| Tuya value | Home Assistant switch |
+| --- | --- |
+| 0 | off |
+| 1 | on |
