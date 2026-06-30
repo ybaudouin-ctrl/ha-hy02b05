@@ -10,5 +10,12 @@
         }
       }
     }
+  },
+  "entity": {
+    "switch": {
+      "child_lock": {
+        "name": "Verrouillage enfant"
+      }
+    }
   }
 }

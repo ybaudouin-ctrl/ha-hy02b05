@@ -31,6 +31,7 @@ tele/Therm_UG_Bureau/RESULT
 stat/Therm_UG_Bureau/POWER
 cmnd/Therm_UG_Bureau/POWER
 cmnd/Therm_UG_Bureau/TuyaSend2
+cmnd/Therm_UG_Bureau/TuyaSend1
 cmnd/Therm_UG_Bureau/TuyaSend4
 ```
 
@@ -153,3 +154,17 @@ Mode values:
 | 1 | `auto` |
 | 2 | `away` |
 | 3 | `override` |
+
+Child lock:
+
+```text
+Topic:   cmnd/<topic>/TuyaSend1
+Payload: 6,1
+```
+
+Child lock values:
+
+| Value | Meaning |
+| --- | --- |
+| 0 | unlocked |
+| 1 | locked |

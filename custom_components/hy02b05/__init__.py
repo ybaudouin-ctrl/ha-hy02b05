@@ -6,11 +6,13 @@ from homeassistant.core import HomeAssistant
 from .const import DOMAIN
 from .coordinator import HY02Coordinator
 
-PLATFORMS = ("climate",)
+PLATFORMS = ("climate", "switch")
+
 
 async def async_setup(hass: HomeAssistant, config: dict) -> bool:
     """Set up the HY02B05 integration."""
     return True
+
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up HY02B05 from a config entry."""
@@ -23,6 +25,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True
+
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""

@@ -245,10 +245,11 @@ class HY02MQTT:
 
         # DP6: Child Lock
         if "DpType1Id6" in tuya:
-            self.coordinator.state.child_lock = tuya["DpType1Id6"] == 1
+            child_lock = str(tuya["DpType1Id6"]).strip().lower()
+            self.coordinator.state.child_lock = child_lock in ("1", "true", "on")
             _LOGGER.debug(
                 "Updated child_lock to %s for %s",
-                tuya["DpType1Id6"] == 1,
+                self.coordinator.state.child_lock,
                 self.topic,
             )
             updated = True

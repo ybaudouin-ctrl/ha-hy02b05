@@ -12,7 +12,6 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
 from .const import (
     DOMAIN,
-    HY02Preset,
     MANUFACTURER,
     MODEL,
 )
@@ -88,7 +87,7 @@ class HY02Commands:
         payload = "1" if locked else "0"
         await mqtt.async_publish(
             self.hass,
-            f"cmnd/{self.topic}/TuyaSend4",
+            f"cmnd/{self.topic}/TuyaSend1",
             f"6,{payload}",
         )
 

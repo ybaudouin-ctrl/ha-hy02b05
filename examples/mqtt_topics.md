@@ -67,6 +67,20 @@ Topic:   cmnd/Therm_UG_Bureau/TuyaSend4
 Payload: 4,3
 ```
 
+Enable child lock:
+
+```text
+Topic:   cmnd/Therm_UG_Bureau/TuyaSend1
+Payload: 6,1
+```
+
+Disable child lock:
+
+```text
+Topic:   cmnd/Therm_UG_Bureau/TuyaSend1
+Payload: 6,0
+```
+
 ## Expected Payloads
 
 Sensor:

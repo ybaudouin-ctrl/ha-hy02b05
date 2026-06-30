@@ -10,6 +10,7 @@ by the thermostat MCU, and sends Tuya commands back through Tasmota.
 ## What It Does
 
 - Adds one Home Assistant `climate` entity for the thermostat.
+- Adds one Home Assistant `switch` entity for the child lock.
 - Shows current room temperature from Tasmota `TuyaSNS.Temperature`.
 - Shows and controls the target temperature from `TuyaSNS.TempSet`.
 - Turns heating power on and off through `cmnd/<topic>/POWER`.
@@ -39,7 +40,7 @@ The datapoint mapping used by this integration is:
 | DP2 | Target temperature, tenths of a degree Celsius | write with `TuyaSend2` |
 | DP3 | Current room temperature | read from `TuyaSNS.Temperature` |
 | DP4 | Operating mode | read and write with `TuyaSend4` |
-| DP6 | Child lock | read from `TuyaReceived` |
+| DP6 | Child lock | read from `TuyaReceived`, write with `TuyaSend1` |
 
 See [docs/Mapping.md](docs/Mapping.md) for the full MQTT and datapoint notes.
 
@@ -101,6 +102,7 @@ tele/<topic>/RESULT
 stat/<topic>/POWER
 cmnd/<topic>/POWER
 cmnd/<topic>/TuyaSend2
+cmnd/<topic>/TuyaSend1
 cmnd/<topic>/TuyaSend4
 ```
 
@@ -121,6 +123,7 @@ Current release:
 | Entity | Description |
 | --- | --- |
 | `climate.<name>` | Thermostat power, current temperature, target temperature, and preset mode |
+| `switch.<name>_child_lock` | Enables or disables the thermostat child lock |
 
 The climate entity supports:
 
@@ -128,6 +131,9 @@ The climate entity supports:
 - Target temperature: 5 to 35 degrees Celsius, step 0.5
 - Presets: `manual`, `auto`, `away`, `override`
 - Attribute: `child_lock_enabled`
+
+The child lock switch mirrors DP6 and sends `TuyaSend1 6,1` or `TuyaSend1 6,0`
+through Tasmota.
 
 ## Troubleshooting
 
@@ -171,6 +177,7 @@ device:
 cmnd/<topic>/POWER ON
 cmnd/<topic>/TuyaSend2 2,210
 cmnd/<topic>/TuyaSend4 4,0
+cmnd/<topic>/TuyaSend1 6,1
 ```
 
 ## Documentation
