@@ -37,17 +37,21 @@ cmnd/Therm_UG_Bureau/TuyaSend4
 
 ## Recommended Console Commands
 
-Run these from the Tasmota web console:
+Run this from the Tasmota web console:
 
 ```text
-SetOption66 1
-TelePeriod 300
+Backlog TuyaMCU 11,1; TuyaMCU 72,2; TuyaMCU 71,3; TuyaMCU 26,4; SetOption66 1; TempRes 1; TelePeriod 30
 ```
 
 Meaning:
 
+- `TuyaMCU 11,1` maps Tuya datapoint 1 (power/relay) to Tasmota relay 1.
+- `TuyaMCU 72,2` maps Tuya datapoint 2 (target temperature) to Tasmota virtual switch 2.
+- `TuyaMCU 71,3` maps Tuya datapoint 3 (current temperature) to Tasmota virtual sensor 3.
+- `TuyaMCU 26,4` maps Tuya datapoint 4 (operating mode) to Tasmota function 26 slot 4.
 - `SetOption66 1` publishes decoded `TuyaReceived` payloads to MQTT.
-- `TelePeriod 300` publishes telemetry every 300 seconds.
+- `TempRes 1` sets temperature resolution to 1 decimal place.
+- `TelePeriod 30` publishes telemetry every 30 seconds (fast updates).
 
 ## Verify Telemetry
 

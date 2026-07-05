@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.0
+
+- Updated Tasmota setup documentation with complete TuyaMCU configuration Backlog command.
+- Added TuyaMCU datapoint mappings for optimal device configuration.
+- Changed TelePeriod from 300 to 30 seconds for faster telemetry updates.
+- Documented temperature resolution setting (`TempRes 1`).
+
 ## 1.1.1
 
 - Added local integration artwork for the HY02B05/Floureon thermostat.
