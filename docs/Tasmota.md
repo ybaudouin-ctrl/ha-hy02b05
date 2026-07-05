@@ -40,11 +40,12 @@ cmnd/Therm_UG_Bureau/TuyaSend4
 Run this from the Tasmota web console:
 
 ```text
-Backlog TuyaMCU 11,1; TuyaMCU 72,2; TuyaMCU 71,3; TuyaMCU 26,4; SetOption66 1; TempRes 1; TelePeriod 30
+Backlog Module 54; TuyaMCU 11,1; TuyaMCU 72,2; TuyaMCU 71,3; TuyaMCU 26,4; SetOption66 1; TempRes 1; TelePeriod 30; Timezone 99; NtpServer1 pool.ntp.org; NtpServer2 time.google.com; NtpServer3 time.cloudflare.com; Restart 1
 ```
 
 Meaning:
 
+- `Module 54` sets the module type to TYWE3S (Wi-Fi thermostat).
 - `TuyaMCU 11,1` maps Tuya datapoint 1 (power/relay) to Tasmota relay 1.
 - `TuyaMCU 72,2` maps Tuya datapoint 2 (target temperature) to Tasmota virtual switch 2.
 - `TuyaMCU 71,3` maps Tuya datapoint 3 (current temperature) to Tasmota virtual sensor 3.
@@ -52,6 +53,9 @@ Meaning:
 - `SetOption66 1` publishes decoded `TuyaReceived` payloads to MQTT.
 - `TempRes 1` sets temperature resolution to 1 decimal place.
 - `TelePeriod 30` publishes telemetry every 30 seconds (fast updates).
+- `Timezone 99` sets timezone to UTC.
+- `NtpServer1 pool.ntp.org`, `NtpServer2 time.google.com`, `NtpServer3 time.cloudflare.com` configure NTP time synchronization.
+- `Restart 1` applies all changes and restarts the device.
 
 ## Verify Telemetry
 

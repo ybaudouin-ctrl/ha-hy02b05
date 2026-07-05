@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.1
+
+- Updated Tasmota configuration Backlog command with complete setup including Module 54, Timezone, and NTP servers.
+- Added Module 54 (TYWE3S) device configuration.
+- Added Timezone 99 (UTC) and NTP server configuration for accurate time synchronization.
+- Documented device restart procedure to apply all configuration changes.
+
 ## 1.2.0
 
 - Updated Tasmota setup documentation with complete TuyaMCU configuration Backlog command.
