@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.2.2
+
+- Added Material Design Icons for thermostat preset modes.
+- Manual mode: `mdi:hand-pointing-right`
+- Auto mode: `mdi:auto-fix`
+- Away mode: `mdi:exit-run`
+- Override mode: `mdi:flash`
+- Implements `preset_mode_icon` property for improved UI representation.
+
 ## 1.2.1
 
 - Updated Tasmota configuration Backlog command with complete setup including Module 54, Timezone, and NTP servers.

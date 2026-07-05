@@ -34,10 +34,10 @@ class HY02Mode(IntEnum):
 class HY02Preset(StrEnum):
     """Home Assistant preset names."""
 
-    MANUAL = "manual"
-    AUTO = "auto"
-    AWAY = "away"
-    OVERRIDE = "override"
+    MANUAL = "Manual"
+    AUTO = "Auto"
+    AWAY = "Away"
+    OVERRIDE = "Override"
 
 
 PRESET_MODES = [
@@ -46,3 +46,11 @@ PRESET_MODES = [
     HY02Preset.AWAY,
     HY02Preset.OVERRIDE,
 ]
+
+# Map preset modes to Material Design Icons
+PRESET_MODE_ICONS = {
+    HY02Preset.MANUAL: "mdi:hand-pointing-right",
+    HY02Preset.AUTO: "mdi:auto-fix",
+    HY02Preset.AWAY: "mdi:exit-run",
+    HY02Preset.OVERRIDE: "mdi:flash",
+}

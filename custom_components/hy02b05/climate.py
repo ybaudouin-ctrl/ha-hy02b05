@@ -15,7 +15,7 @@ from homeassistant.const import ATTR_TEMPERATURE, UnitOfTemperature
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import HY02Mode, HY02Preset, PRESET_MODES
+from .const import HY02Mode, HY02Preset, PRESET_MODES, PRESET_MODE_ICONS
 from .entity import HY02Entity
 
 _LOGGER = logging.getLogger(__name__)
@@ -107,6 +107,14 @@ class HY02Climate(HY02Entity, ClimateEntity):
             return PRESET_MODE_MAP.get(HY02Mode(int(self.coordinator.state.preset_mode)), HY02Preset.MANUAL)
         except Exception:
             return HY02Preset.MANUAL
+
+    @property
+    def preset_mode_icon(self) -> str | None:
+        """Return icon for current preset mode."""
+        mode = self.preset_mode
+        if mode:
+            return PRESET_MODE_ICONS.get(mode)
+        return None
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
