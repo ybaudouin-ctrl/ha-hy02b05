@@ -67,6 +67,17 @@ class HY02MQTT:
             )
             _LOGGER.debug("Subscribed to tele/%s/RESULT", self.topic)
 
+            # Subscribe to Tasmota state messages, which may also contain POWER
+            self._unsubscribers.append(
+                await mqtt.async_subscribe(
+                    self.hass,
+                    f"tele/{self.topic}/STATE",
+                    self._result_message,
+                    1,
+                )
+            )
+            _LOGGER.debug("Subscribed to tele/%s/STATE", self.topic)
+
             # Subscribe to power status
             self._unsubscribers.append(
                 await mqtt.async_subscribe(
@@ -200,7 +211,7 @@ class HY02MQTT:
             )
 
     def _result_message(self, msg) -> None:
-        """Handle RESULT message with Tuya data point changes.
+        """Handle RESULT or STATE messages that may contain Tuya data or POWER.
 
         This is a sync callback as required by HA MQTT API.
         Schedules async work via hass.create_task().
@@ -208,23 +219,25 @@ class HY02MQTT:
         Args:
             msg: MQTT message object
         """
-        _LOGGER.debug("Received RESULT message on %s/RESULT", self.topic)
+        _LOGGER.debug("Received RESULT/STATE message for %s", self.topic)
         self.hass.create_task(self._async_result_message(msg))
 
     async def _async_result_message(self, msg) -> None:
-        """Process RESULT messages asynchronously."""
+        """Process RESULT or STATE messages asynchronously."""
         try:
             payload = json.loads(msg.payload)
         except (json.JSONDecodeError, AttributeError, TypeError) as err:
             _LOGGER.warning(
-                "Failed to parse RESULT message for %s: %s", self.topic, err
+                "Failed to parse RESULT/STATE message for %s: %s",
+                self.topic,
+                err,
             )
             return
 
         updated = False
 
-        # Some devices report power changes in RESULT instead of on
-        # stat/<topic>/POWER.
+        # Some devices report power changes in RESULT or STATE instead of
+        # on stat/<topic>/POWER.
         power_value = payload.get("POWER")
         if power_value is not None:
             power = str(power_value).strip().upper()

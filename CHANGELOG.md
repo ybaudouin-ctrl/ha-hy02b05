@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.5
+
+- Subscribe to Tasmota STATE messages to update thermostat power state.
+
 ## 1.2.4
 
 - Fixed setting thermostat presets from Home Assistant.
