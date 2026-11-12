@@ -161,12 +161,22 @@ class HY02Climate(HY02Entity, ClimateEntity):
             preset_mode: One of: 'none', 'auto', 'away', 'boost'
         """
         try:
+            # `preset_mode` is provided by Home Assistant as a string. Our
+            # REVERSE_PRESET_MODE_MAP keys are `HY02Preset` enum members, so
+            # attempt lookup by the raw string first, then by converting to
+            # `HY02Preset` to support both cases.
             mode_value = REVERSE_PRESET_MODE_MAP.get(preset_mode)
+            if mode_value is None:
+                try:
+                    mode_value = REVERSE_PRESET_MODE_MAP.get(HY02Preset(preset_mode))
+                except Exception:
+                    mode_value = None
+
             if mode_value is None:
                 _LOGGER.error(
                     "Invalid preset mode: %s. Valid modes: %s",
                     preset_mode,
-                    list(REVERSE_PRESET_MODE_MAP.keys()),
+                    [str(k) for k in REVERSE_PRESET_MODE_MAP.keys()],
                 )
                 return
 

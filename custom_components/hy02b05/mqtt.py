@@ -13,7 +13,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class HY02MQTT:
-    """Handle MQTT communication with HY02B05 device.
+    """Handle MQTT communication with HY02B05 thermostat.
 
     Subscribes to Tasmota MQTT topics and updates coordinator state.
     Implements proper HA 2025 MQTT lifecycle with sync callbacks.
@@ -115,9 +115,7 @@ class HY02MQTT:
         Args:
             msg: MQTT message object
         """
-        _LOGGER.debug(
-            "Received SENSOR message on %s/SENSOR", self.topic
-        )
+        _LOGGER.debug("Received SENSOR message on %s/SENSOR", self.topic)
         self.hass.create_task(self._async_sensor_message(msg))
 
     async def _async_sensor_message(self, msg) -> None:
@@ -214,11 +212,7 @@ class HY02MQTT:
         self.hass.create_task(self._async_result_message(msg))
 
     async def _async_result_message(self, msg) -> None:
-        """Process RESULT message asynchronously.
-
-        Args:
-            msg: MQTT message object
-        """
+        """Process RESULT messages asynchronously."""
         try:
             payload = json.loads(msg.payload)
         except (json.JSONDecodeError, AttributeError, TypeError) as err:
@@ -227,32 +221,44 @@ class HY02MQTT:
             )
             return
 
-        if "TuyaReceived" not in payload:
-            return
-
-        tuya = payload["TuyaReceived"]
         updated = False
 
-        # DP4: Mode (Manual, Auto, Away, Override)
-        if "DpType4Id4" in tuya:
-            self.coordinator.state.preset_mode = int(tuya["DpType4Id4"])
-            _LOGGER.debug(
-                "Updated preset_mode to %s for %s",
-                tuya["DpType4Id4"],
-                self.topic,
-            )
-            updated = True
+        # Some devices report power changes in RESULT instead of on
+        # stat/<topic>/POWER.
+        power_value = payload.get("POWER")
+        if power_value is not None:
+            power = str(power_value).strip().upper()
+            if power in ("ON", "OFF"):
+                self.coordinator.state.power = power == "ON"
+                _LOGGER.debug("Updated power to %s for %s", power, self.topic)
+                updated = True
 
-        # DP6: Child Lock
-        if "DpType1Id6" in tuya:
-            child_lock = str(tuya["DpType1Id6"]).strip().lower()
-            self.coordinator.state.child_lock = child_lock in ("1", "true", "on")
-            _LOGGER.debug(
-                "Updated child_lock to %s for %s",
-                self.coordinator.state.child_lock,
-                self.topic,
-            )
-            updated = True
+        tuya = payload.get("TuyaReceived")
+        if isinstance(tuya, dict):
+            # DP4: Mode (Manual, Auto, Away, Override)
+            if "DpType4Id4" in tuya:
+                self.coordinator.state.preset_mode = int(tuya["DpType4Id4"])
+                _LOGGER.debug(
+                    "Updated preset_mode to %s for %s",
+                    tuya["DpType4Id4"],
+                    self.topic,
+                )
+                updated = True
+
+            # DP6: Child Lock
+            if "DpType1Id6" in tuya:
+                child_lock = str(tuya["DpType1Id6"]).strip().lower()
+                self.coordinator.state.child_lock = child_lock in (
+                    "1",
+                    "true",
+                    "on",
+                )
+                _LOGGER.debug(
+                    "Updated child_lock to %s for %s",
+                    self.coordinator.state.child_lock,
+                    self.topic,
+                )
+                updated = True
 
         if updated:
             if not self.coordinator.state.available:

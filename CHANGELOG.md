@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.2.4
+
+- Fixed setting thermostat presets from Home Assistant.
+- Updated device state when Tasmota reports power and Tuya values in RESULT messages.
+
+## 1.2.3
+
+- Updated the HACS logo artwork and README presentation.
+
 ## 1.2.2
 
 - Added Material Design Icons for thermostat preset modes.
