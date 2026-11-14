@@ -89,6 +89,17 @@ class HY02MQTT:
             )
             _LOGGER.debug("Subscribed to stat/%s/POWER", self.topic)
 
+            # Tasmota uses POWER1 when the device has multiple relays.
+            self._unsubscribers.append(
+                await mqtt.async_subscribe(
+                    self.hass,
+                    f"stat/{self.topic}/POWER1",
+                    self._power_message,
+                    1,
+                )
+            )
+            _LOGGER.debug("Subscribed to stat/%s/POWER1", self.topic)
+
             # POWER2 is mapped to the physical heating relay (Tuya DP102).
             self._unsubscribers.append(
                 await mqtt.async_subscribe(
@@ -276,9 +287,21 @@ class HY02MQTT:
 
         updated = False
 
-        # Some devices report power changes in RESULT or STATE instead of
-        # on stat/<topic>/POWER.
-        power_value = payload.get("POWER")
+        # With multiple relays, Tasmota STATE may publish POWER1/POWER2 as
+        # JSON fields instead of separate stat/<topic>/POWER<n> messages.
+        heating_value = payload.get("POWER2")
+        if heating_value is not None:
+            heating = str(heating_value).strip().upper()
+            if heating in ("ON", "OFF"):
+                self.coordinator.state.heating_active = heating == "ON"
+                _LOGGER.debug(
+                    "Updated heating_active to %s for %s", heating, self.topic
+                )
+                updated = True
+
+        # Multi-relay Tasmota reports POWER1/POWER2 in STATE, while single
+        # relay devices and some RESULT messages use POWER.
+        power_value = payload.get("POWER1", payload.get("POWER"))
         if power_value is not None:
             power = str(power_value).strip().upper()
             if power in ("ON", "OFF"):

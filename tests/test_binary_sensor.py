@@ -38,3 +38,27 @@ def test_heating_sensor_metadata():
     """The entity is presented as a heating binary sensor with a fire icon."""
     assert HY02HeatingBinarySensor._attr_device_class == BinarySensorDeviceClass.HEAT
     assert HY02HeatingBinarySensor._attr_icon == "mdi:fire"
+
+
+def test_state_message_updates_heating_without_changing_thermostat_power():
+    """Tasmota STATE updates thermostat and heating relay independently."""
+    state = SimpleNamespace(available=False, power=False, heating_active=None)
+    coordinator = SimpleNamespace(
+        hass=SimpleNamespace(),
+        topic="thermostat",
+        state=state,
+        async_update_listeners=lambda: None,
+    )
+    handler = HY02MQTT(coordinator)
+
+    import asyncio
+
+    asyncio.run(
+        handler._async_result_message(
+            SimpleNamespace(payload=b'{"POWER1":"ON","POWER2":"ON"}')
+        )
+    )
+
+    assert state.heating_active is True
+    assert state.power is True
+    assert state.available is True

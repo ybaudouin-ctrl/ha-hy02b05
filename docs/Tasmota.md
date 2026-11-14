@@ -29,6 +29,7 @@ With the default full topic, Tasmota publishes and receives:
 tele/Therm_UG_Bureau/SENSOR
 tele/Therm_UG_Bureau/RESULT
 stat/Therm_UG_Bureau/POWER
+stat/Therm_UG_Bureau/POWER1
 stat/Therm_UG_Bureau/POWER2
 cmnd/Therm_UG_Bureau/POWER
 cmnd/Therm_UG_Bureau/TuyaSend2
@@ -104,11 +105,15 @@ or:
 OFF
 ```
 
-`POWER` (Tasmota `POWER1`, Tuya DP1) controls thermostat power and continues to
-drive the climate entity's `heat`/`off` state. `POWER2` (Tuya DP102) reports
+`POWER` or `POWER1` (Tuya DP1) controls thermostat power and drives the climate
+entity's `heat`/`off` state. `POWER2` (Tuya DP102) reports
 the physical heating relay and drives the separate Home Assistant heating
 binary sensor (`heat` device class, fire icon). The sensor remains unknown until
 the first valid `POWER2` message arrives.
+
+For multi-relay devices, Tasmota can publish both relay states in
+`tele/<topic>/STATE` as `POWER1` and `POWER2`; the integration reads those fields
+as well as the individual status topics.
 
 Subscribe to:
 

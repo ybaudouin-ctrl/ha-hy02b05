@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.7
+
+- Read multi-relay Tasmota `POWER1` and `POWER2` values from STATE messages.
+- Subscribe to `stat/<topic>/POWER1` so thermostat ON/OFF remains available after adding the second relay.
+
 ## 1.2.6
 
 - Added a heating binary sensor based on Tasmota `POWER2` (Tuya DP102), independent of thermostat power `POWER1`.

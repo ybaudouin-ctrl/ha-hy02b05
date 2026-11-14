@@ -105,6 +105,7 @@ topics:
 tele/<topic>/SENSOR
 tele/<topic>/RESULT
 stat/<topic>/POWER
+stat/<topic>/POWER1
 stat/<topic>/POWER2
 cmnd/<topic>/POWER
 cmnd/<topic>/TuyaSend2
