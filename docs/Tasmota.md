@@ -29,6 +29,7 @@ With the default full topic, Tasmota publishes and receives:
 tele/Therm_UG_Bureau/SENSOR
 tele/Therm_UG_Bureau/RESULT
 stat/Therm_UG_Bureau/POWER
+stat/Therm_UG_Bureau/POWER2
 cmnd/Therm_UG_Bureau/POWER
 cmnd/Therm_UG_Bureau/TuyaSend2
 cmnd/Therm_UG_Bureau/TuyaSend1
@@ -40,7 +41,7 @@ cmnd/Therm_UG_Bureau/TuyaSend4
 Run this from the Tasmota web console:
 
 ```text
-Backlog Module 54; TuyaMCU 11,1; TuyaMCU 72,2; TuyaMCU 71,3; TuyaMCU 26,4; SetOption66 1; TempRes 1; TelePeriod 30; Timezone 99; NtpServer1 pool.ntp.org; NtpServer2 time.google.com; NtpServer3 time.cloudflare.com; Restart 1
+Backlog Module 54; TuyaMCU 11,1; TuyaMCU 72,2; TuyaMCU 71,3; TuyaMCU 26,4; TuyaMCU 12,102; SetOption66 1; TempRes 1; TelePeriod 30; Timezone 99; NtpServer1 pool.ntp.org; NtpServer2 time.google.com; NtpServer3 time.cloudflare.com; Restart 1
 ```
 
 Meaning:
@@ -50,6 +51,7 @@ Meaning:
 - `TuyaMCU 72,2` maps Tuya datapoint 2 (target temperature) to Tasmota virtual switch 2.
 - `TuyaMCU 71,3` maps Tuya datapoint 3 (current temperature) to Tasmota virtual sensor 3.
 - `TuyaMCU 26,4` maps Tuya datapoint 4 (operating mode) to Tasmota function 26 slot 4.
+- `TuyaMCU 12,102` maps Tuya datapoint 102 (physical heating relay state) to Tasmota relay 2 (`POWER2`).
 - `SetOption66 1` publishes decoded `TuyaReceived` payloads to MQTT.
 - `TempRes 1` sets temperature resolution to 1 decimal place.
 - `TelePeriod 30` publishes telemetry every 30 seconds (fast updates).
@@ -102,8 +104,20 @@ or:
 OFF
 ```
 
-The integration maps `ON` to Home Assistant `heat` and `OFF` to Home Assistant
-`off`.
+`POWER` (Tasmota `POWER1`, Tuya DP1) controls thermostat power and continues to
+drive the climate entity's `heat`/`off` state. `POWER2` (Tuya DP102) reports
+the physical heating relay and drives the separate Home Assistant heating
+binary sensor (`heat` device class, fire icon). The sensor remains unknown until
+the first valid `POWER2` message arrives.
+
+Subscribe to:
+
+```text
+stat/<topic>/POWER2
+```
+
+Expected payloads are `ON` while heating is active and `OFF` otherwise. Confirm
+this mapping on each thermostat before relying on the sensor.
 
 ## Verify Tuya Datapoints
 

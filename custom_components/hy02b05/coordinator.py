@@ -29,6 +29,9 @@ class HY02State:
 
     power: bool = False
 
+    # None until the thermostat reports the physical heating relay state.
+    heating_active: bool | None = None
+
     current_temperature: float | None = None
 
     target_temperature: float | None = None

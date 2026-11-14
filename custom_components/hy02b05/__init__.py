@@ -6,7 +6,7 @@ from homeassistant.core import HomeAssistant
 from .const import DOMAIN
 from .coordinator import HY02Coordinator
 
-PLATFORMS = ("climate", "switch")
+PLATFORMS = ("climate", "switch", "binary_sensor")
 
 
 async def async_setup(hass: HomeAssistant, config: dict) -> bool:

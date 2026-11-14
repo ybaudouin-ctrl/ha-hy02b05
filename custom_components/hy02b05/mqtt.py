@@ -89,6 +89,17 @@ class HY02MQTT:
             )
             _LOGGER.debug("Subscribed to stat/%s/POWER", self.topic)
 
+            # POWER2 is mapped to the physical heating relay (Tuya DP102).
+            self._unsubscribers.append(
+                await mqtt.async_subscribe(
+                    self.hass,
+                    f"stat/{self.topic}/POWER2",
+                    self._heating_message,
+                    1,
+                )
+            )
+            _LOGGER.debug("Subscribed to stat/%s/POWER2", self.topic)
+
             self._connected = True
             _LOGGER.info("MQTT connected for device %s", self.topic)
         except Exception as err:
@@ -208,6 +219,35 @@ class HY02MQTT:
         except Exception as err:
             _LOGGER.error(
                 "Failed to process POWER message for %s: %s", self.topic, err
+            )
+
+    def _heating_message(self, msg) -> None:
+        """Handle POWER2, which reports the physical heating relay."""
+        _LOGGER.debug("Received POWER2 message on %s/POWER2", self.topic)
+        self.hass.create_task(self._async_heating_message(msg))
+
+    async def _async_heating_message(self, msg) -> None:
+        """Update physical heating state independently from thermostat power."""
+        try:
+            payload = msg.payload
+            if isinstance(payload, bytes):
+                payload = payload.decode("utf-8")
+
+            status = payload.strip().upper()
+            if status not in {"ON", "OFF"}:
+                _LOGGER.warning(
+                    "Ignoring invalid POWER2 status for %s: %r", self.topic, payload
+                )
+                return
+
+            self.coordinator.state.heating_active = status == "ON"
+            if not self.coordinator.state.available:
+                self.coordinator.state.available = True
+                _LOGGER.info("Device %s is now available", self.topic)
+            self.coordinator.async_update_listeners()
+        except (AttributeError, UnicodeDecodeError, TypeError) as err:
+            _LOGGER.warning(
+                "Failed to process POWER2 message for %s: %s", self.topic, err
             )
 
     def _result_message(self, msg) -> None:

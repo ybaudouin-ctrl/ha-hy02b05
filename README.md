@@ -15,6 +15,7 @@ by the thermostat MCU, and sends Tuya commands back through Tasmota.
 
 - Adds one Home Assistant `climate` entity for the thermostat.
 - Adds one Home Assistant `switch` entity for the child lock.
+- Adds a heating `binary_sensor` for the physical heating relay (`POWER2`).
 - Shows current room temperature from Tasmota `TuyaSNS.Temperature`.
 - Shows and controls the target temperature from `TuyaSNS.TempSet`.
 - Turns heating power on and off through `cmnd/<topic>/POWER`.
@@ -104,6 +105,7 @@ topics:
 tele/<topic>/SENSOR
 tele/<topic>/RESULT
 stat/<topic>/POWER
+stat/<topic>/POWER2
 cmnd/<topic>/POWER
 cmnd/<topic>/TuyaSend2
 cmnd/<topic>/TuyaSend1
@@ -128,6 +130,7 @@ Current release:
 | --- | --- |
 | `climate.<name>` | Thermostat power, current temperature, target temperature, and preset mode |
 | `switch.<name>_child_lock` | Enables or disables the thermostat child lock |
+| `binary_sensor.<name>_heating` | Physical heating relay state reported through Tasmota `POWER2` |
 
 The climate entity supports:
 

@@ -12,6 +12,11 @@
     }
   },
   "entity": {
+    "binary_sensor": {
+      "heating": {
+        "name": "Chauffage actif"
+      }
+    },
     "switch": {
       "child_lock": {
         "name": "Verrouillage enfant"

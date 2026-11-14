@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.6
+
+- Added a heating binary sensor based on Tasmota `POWER2` (Tuya DP102), independent of thermostat power `POWER1`.
+- Documented the required `TuyaMCU 12,102` mapping and MQTT status topic.
+
 ## 1.2.5
 
 - Subscribe to Tasmota STATE messages to update thermostat power state.
