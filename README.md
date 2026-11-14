@@ -129,7 +129,7 @@ Current release:
 
 | Entity | Description |
 | --- | --- |
-| `climate.<name>` | Thermostat power, current temperature, target temperature, and preset mode |
+| `climate.<name>` | Thermostat power, current temperature, target temperature, preset mode, and physical heating activity |
 | `switch.<name>_child_lock` | Enables or disables the thermostat child lock |
 | `binary_sensor.<name>_heating` | Physical heating relay state reported through Tasmota `POWER2` |
 

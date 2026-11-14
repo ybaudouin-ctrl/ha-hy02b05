@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.9
+
+- Expose the physical heating relay as the climate entity's HVAC action.
+- Show `mdi:fire` on the climate entity while Tasmota `POWER2` is on.
+
 ## 1.2.8
 
 - Added the existing thermostat icon at `custom_components/hy02b05/brand/icon.png` for the Home Assistant Marketplace.

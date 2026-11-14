@@ -108,8 +108,9 @@ OFF
 `POWER` or `POWER1` (Tuya DP1) controls thermostat power and drives the climate
 entity's `heat`/`off` state. `POWER2` (Tuya DP102) reports
 the physical heating relay and drives the separate Home Assistant heating
-binary sensor (`heat` device class, fire icon). The sensor remains unknown until
-the first valid `POWER2` message arrives.
+binary sensor (`heat` device class, fire icon). It also drives the climate
+entity's `hvac_action` and changes its icon to `mdi:fire` while heating is active.
+The binary sensor remains unknown until the first valid `POWER2` message arrives.
 
 For multi-relay devices, Tasmota can publish both relay states in
 `tele/<topic>/STATE` as `POWER1` and `POWER2`; the integration reads those fields

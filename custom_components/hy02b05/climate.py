@@ -7,6 +7,7 @@ from typing import Any
 
 from homeassistant.components.climate import (
     ClimateEntity,
+    HVACAction,
     HVACMode,
 )
 from homeassistant.components.climate.const import ClimateEntityFeature
@@ -55,7 +56,6 @@ class HY02Climate(HY02Entity, ClimateEntity):
     """
 
     _attr_name = None
-    _attr_icon = "mdi:thermostat"
     _attr_unique_id_suffix = "climate"
 
     _attr_temperature_unit = UnitOfTemperature.CELSIUS
@@ -99,6 +99,24 @@ class HY02Climate(HY02Entity, ClimateEntity):
         if self.coordinator.state.power:
             return HVACMode.HEAT
         return HVACMode.OFF
+
+    @property
+    def hvac_action(self) -> HVACAction | None:
+        """Return physical heating activity reported by Tasmota POWER2."""
+        if not self.coordinator.state.power:
+            return HVACAction.OFF
+        if self.coordinator.state.heating_active is None:
+            return None
+        if self.coordinator.state.heating_active:
+            return HVACAction.HEATING
+        return HVACAction.IDLE
+
+    @property
+    def icon(self) -> str:
+        """Show a flame only while the physical heating relay is active."""
+        if self.coordinator.state.heating_active:
+            return "mdi:fire"
+        return "mdi:thermostat"
 
     @property
     def preset_mode(self) -> str | None:
