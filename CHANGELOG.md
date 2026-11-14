@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.8
+
+- Added the existing thermostat icon at `custom_components/hy02b05/brand/icon.png` for the Home Assistant Marketplace.
+
 ## 1.2.7
 
 - Read multi-relay Tasmota `POWER1` and `POWER2` values from STATE messages.
